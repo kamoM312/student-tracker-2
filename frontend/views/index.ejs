@@ -1,0 +1,242 @@
+<%- include('partials/header.ejs') %>
+
+<div class="nav flex flex-horizontal">
+  <div>
+    <h1>Student Management</h1>
+  </div>
+
+  <div class="addStudent">
+    <a href="#" id="openAddModal">Add New Student</a>
+  </div>
+</div>
+
+<hr>
+
+<div class="search">
+  <form method="POST" action="/getUser">
+    <input class="searchText" type="text" name="id" />
+    <button class="searchButton" type="submit">
+      <i class="fa fa-circle-thin"></i>
+    </button>
+  </form>
+</div>
+
+<% if (locals.error) { %>
+  <div>
+    <p><%= error.message %></p>
+  </div>
+<% } else if (locals.data) { %>
+  <% if (data.length < 1) { %>
+    <p class="no-result">No Students found</p>
+  <% } else { %>
+    <div class="student-container">
+      <div class="student-header">
+        <ul class="flex flex-horizontal">
+          <li>iD</li>
+          <li>Name</li>
+          <li>Email</li>
+          <li>Actions</li>
+        </ul>
+      </div>
+
+      <% data.forEach(student => { %>
+        <div class="flex flex-horizontal student-item">
+          <div><p><%= student.uid %></p></div>
+          <div><p><%= student.name %></p></div>
+          <div><p><%= student.email %></p></div>
+          <div>
+            <a href="#" class="view-btn"
+            data-id="<%= student.id %>"
+            data-uid="<%= student.uid %>"
+               data-name="<%= student.name %>"
+               data-email="<%= student.email %>"
+               data-phone="<%= student.phone %>"
+               data-dob="<%= student.date %>">
+               View
+            </a>
+            <a href="#" class="edit-btn"
+               data-id="<%= student.id %>"
+               data-name="<%= student.name %>"
+               data-email="<%= student.email %>"
+               data-phone="<%= student.phone %>"
+               data-dob="<%= student.date %>">
+               Edit
+            </a>
+            <a href="#" class="delete-btn"
+               data-id="<%= student.id %>"
+               data-name="<%= student.name %>">
+               Delete
+            </a>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+<% } %>
+
+<!-- view student modal  -->
+<div id="viewModal" class="modal-background hidden">
+    <div class="flex flex-vertical  createForm view-student-modal viewBorders">
+        <div class="view-modal-header flex">
+            <h1>Student Details</h1>
+            <a class="view-link" href="/">Back List</a>
+        </div>
+        <hr class="hr">
+        <div>
+            <a class="view-link view-div-link" href="/">Back to List</a>
+        </div>
+        <div class="grid-container">
+            <div class="bold">ID:</div>
+            <div id="view-id"><p></p></div>
+            <div class="bold">Name:</div>
+            <div id="view-name"><p></p></div>
+             <div class="bold">Email</div>
+            <div id="view-email"><p></p></div>
+            <div class="bold">Phone:</div>
+            <div id="view-phone"><p></p></div>
+            <div class="bold">DOB:</div>
+            <div id="view-dob"><p></p></div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Student Modal -->
+<div id="addModal" class="modal-background hidden">
+  <div class="flex flex-vertical createForm addBorders">
+    <h1>Add New Student</h1>
+    <hr>
+    <form class="flex flex-vertical createFormBody" method="POST" action="/add">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" />
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" />
+
+      <input type="submit" value="Save" />
+    </form>
+  </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div id="editModal" class="modal-background hidden">
+  <div class="flex flex-vertical createForm editBorders">
+    <h1>Edit Student</h1>
+    <hr>
+    <form class="flex flex-vertical createFormBody" method="POST" action="/edit">
+      <input type="hidden" name="id" id="edit-id" />
+
+      <label for="edit-name">Full Name</label>
+      <input type="text" id="edit-name" name="name" required />
+
+      <label for="edit-email">Email</label>
+      <input type="email" id="edit-email" name="email" required />
+
+      <label for="edit-phone">Phone</label>
+      <input type="text" id="edit-phone" name="phone" />
+
+      <label for="edit-dob">Date of Birth</label>
+      <input type="date" id="edit-dob" name="dob" />
+
+      <input type="submit" value="Update" />
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal-background hidden">
+  <div class="flex flex-vertical createForm deleteBorders">
+    <h1>Confirm Delete</h1>
+    <hr>
+    <p id="delete-message"></p>
+    <div class="flex flex-horizontal delete-modal-buttons">
+      <button id="cancelDelete">Cancel</button>
+      <form id="deleteForm" method="POST">
+        <input type="submit" value="Delete"/>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    const viewModal = document.querySelector('#viewModal');
+  const addModal = document.querySelector('#addModal');
+  const editModal = document.querySelector('#editModal');
+  const deleteModal = document.querySelector('#deleteModal');
+
+  // Utility to close a modal
+  function closeModal(modal) {
+    modal.classList.add('hidden');
+  }
+
+//   Open View Modal 
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#view-id').textContent = btn.dataset.uid;
+      document.querySelector('#view-name').textContent = btn.dataset.name;
+      document.querySelector('#view-email').textContent = btn.dataset.email;
+      document.querySelector('#view-phone').textContent = btn.dataset.phone;
+      document.querySelector('#view-dob').textContent = btn.dataset.dob;
+      viewModal.classList.remove('hidden');
+    });
+  });
+
+  // Open Add Modal
+  document.querySelector('#openAddModal')?.addEventListener('click', e => {
+    e.preventDefault();
+    addModal.classList.remove('hidden');
+  });
+
+  // Open Edit Modal
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#edit-id').value = btn.dataset.id;
+      document.querySelector('#edit-name').value = btn.dataset.name;
+      document.querySelector('#edit-email').value = btn.dataset.email;
+      document.querySelector('#edit-phone').value = btn.dataset.phone;
+      document.querySelector('#edit-dob').value = btn.dataset.dob;
+      editModal.classList.remove('hidden');
+    });
+  });
+
+  // Open Delete Modal
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#delete-message').textContent =
+        `Are you sure you want to delete student - ${btn.dataset.name}?`;
+      document.querySelector('#deleteForm').action = `/delete/${btn.dataset.id}`;
+      deleteModal.classList.remove('hidden');
+    });
+  });
+
+  // Cancel buttons
+  document.querySelector('#cancelDelete')?.addEventListener('click', () => closeModal(deleteModal));
+
+  // Close modal when clicking outside
+  [viewModal, addModal, editModal, deleteModal].forEach(modal => {
+    modal?.addEventListener('click', e => {
+      if (e.target === modal) {
+        closeModal(modal);
+      }
+    });
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      [viewModal, addModal, editModal, deleteModal].forEach(closeModal);
+    }
+  });
+</script>
+
+
+
+

@@ -1,0 +1,277 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    /* margin: 0 5%; */
+    font-size: 1rem;
+
+    border-top: solid 1px black;
+    border-bottom: solid .7px #353935;
+    border-left: solid 1.2px black;
+    border-right: solid 0.7px #353935;
+    /* padding: 10px; */
+    padding-bottom: 30px;
+    /* width: 90vw; */
+    margin: 50px 20px;
+}
+
+hr {
+    margin-bottom: 20px;
+}
+
+h1 {
+  font-weight: 300;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-vertical {
+    flex-direction: column;
+}
+
+.flex-horizontal {
+    flex-direction: row;
+}
+
+.nav {
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+div.nav.flex.flex-horizontal, div.student-container, .search {
+    margin: 0 20px;
+}
+
+.addStudent {
+    border: solid 1px black;
+    padding: 10px;
+}
+
+.search {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+input.searchText {
+    padding-left: 30px;
+    padding-bottom: 8px;
+}
+
+/* .searchText {
+    
+} */
+
+.searchButton {
+    position: absolute;
+    top: 4px;
+    left: 10px;
+    background-color: white;
+    border: none;
+}
+
+.student-container {
+    border: solid 1px;
+}
+
+.student-header {
+    border-bottom: solid 1px;
+    justify-content: space-around;
+    background-color: #E5E4E2;
+}
+
+.student-item {
+    border-bottom: solid 1px gray;
+    padding: 5px 0;
+}
+
+ul {
+    list-style: none;
+}
+
+body > div.student-container > div.student-header > ul {
+    padding: 5px 0;
+}
+
+/* ul.flex.flex-horizontal > *, div.flex-horizontal.student-item > * {
+    flex-basis: 25%;
+} */
+
+ul.flex.flex-horizontal > li:first-child, div.flex-horizontal.student-item > div:first-child {
+    margin-left: 20px;
+    flex-basis: 20%;
+}
+
+ul.flex.flex-horizontal > li:nth-child(2), div.flex-horizontal.student-item > div:nth-child(2) {
+   flex-basis: 25%;
+}
+
+ul.flex.flex-horizontal > li:nth-child(3), div.flex-horizontal.student-item > div:nth-child(3) {
+    flex-basis: 30%;
+}
+
+ul.flex.flex-horizontal > li:nth-child(4), div.flex-horizontal.student-item > div:nth-child(4) {
+    flex-basis: 20%;
+}
+
+div.flex-horizontal.student-item > div {
+    display: flex;
+    gap: 20px;
+}
+
+a:not(.view-link) {
+    text-decoration: none;
+    color: black;
+}
+
+.view-link {
+    color: black;
+}
+
+.modal-background {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.createForm {
+    width: 300px;
+    margin: 0 auto;
+    /* gap: 20px; */
+    border: solid 1px;
+    /* padding: 10px; */
+    /* height: 30vh; */
+    background: white;
+}
+
+.addBorders, .editBorders {
+    border: solid 0.7px #353935;
+    border-left: solid 1.2px black;
+}
+
+.viewBorders, .deleteBorders {
+    border: solid 0.7px #353935;
+    border-left: solid 1.2px black;
+    border-right: solid 1.2px black;
+}
+
+.createFormBody {
+    gap: 10px;
+    padding: 10px;
+}
+
+.createFormBody input[type="submit"] {
+    /* width: 30%; */
+    /* margin: 0 auto; */
+    align-self: self-end;
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+    font-weight: 600;
+    background: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.view-student-modal:not(.hr) {
+    padding: 20px 0 30px;
+}
+
+.view-modal-header {
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#viewModal > div > div:nth-child(3){
+    margin-bottom: 15px;
+}
+
+.view-div-link {
+    margin-left: 10px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    row-gap: 8px;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+
+.delete-modal-buttons {
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+#cancelDelete, form#deleteForm > input {
+    padding: 6px;
+    background-color: white;
+    margin-bottom: 8px;
+    margin-top: 15px;
+    border: solid #353935 1px;
+}
+
+form#deleteForm > input {
+    font-weight: 600;
+}
+
+#delete-message {
+    margin-left: 10px;
+}
+
+/* #cancelDelete {
+    border-top: solid black 1px;
+    border: solid #353935 1px;
+} */
+
+#deleteForm {
+
+}
+
+input {
+    border: solid 0.5px;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+/* #edit-name {
+   border: solid 0.5px;
+    padding: 1px 
+} */
+
+.no-result {
+    margin-left: 20px;
+}
+
+#editModal > div > h1, #addModal > div > h1, #deleteModal > div > h1 {
+    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-left: 10px;
+}
