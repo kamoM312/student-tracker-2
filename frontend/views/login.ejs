@@ -1,8 +1,9 @@
-<div>
+<%- include('partials/header.ejs') %>
+
+<div class="flex flex-vertical login-body">
     <h1>Login</h1>
-</div>
-<div>
-    <form method="POST" action="/login" >
+
+     <form class="flex flex-vertical createFormBody" method="POST" action="/login" >
         <label for="name">Email: </label>
         <input type="text" id="name" name="email" />
         <label for="email">Password: </label>

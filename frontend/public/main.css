@@ -17,6 +17,7 @@ body {
     margin: 50px 20px;
 }
 
+
 hr {
     margin-bottom: 20px;
 }
@@ -274,4 +275,9 @@ input {
     margin-bottom: 15px;
     margin-top: 20px;
     margin-left: 10px;
+}
+
+.login-body {
+    width: 300px;
+    margin: 50px auto 0;
 }

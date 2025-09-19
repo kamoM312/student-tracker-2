@@ -6,6 +6,7 @@
  const port = 4000;
 
  let login_id;
+ let isLogged = false;
 
  app.use(express.static('public'));
 
@@ -18,6 +19,9 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/user/:id", async (req, res) => {
+  if(!isLogged){
+    res.redirect("/");
+  }
   const user_id = req.params.id;
   try {
     const response = await axios.get(`http://localhost:3000/users/${user_id}`);
@@ -36,6 +40,9 @@ app.get("/user/:id", async (req, res) => {
 });
 
 app.post("/getUser", async (req, res) => {
+   if(!isLogged){
+    res.redirect("/");
+  }
     const id = req.body.id;
     console.log("id"+id);
     console.log("login"+login_id)
@@ -58,18 +65,31 @@ app.post("/getUser", async (req, res) => {
 });
 
 app.get("/addForm", (req, res) => {
+  if(!isLogged){
+    res.redirect("/");
+  }
   res.render("addForm.ejs");
 })
 
 app.get(`/editForm/:id/:name/:email`, (req, res) => {
+  if(!isLogged){
+    res.redirect("/");
+  }
   const id = req.params.id;
   const name = req.params.name;
   const email = req.params.email;
   res.render("editForm.ejs", {id, name, email});
 })
 
+app.get("/register", (req, res) => {
+  res.render("register.ejs");
+}) 
+
 
 app.post("/add", async (req, res) => {
+   if(!isLogged){
+    res.redirect("/");
+  } else {
   // const {name, email} = req.body;
   const { name, email, phone, dob } = req.body;
   const data = {
@@ -82,28 +102,32 @@ app.post("/add", async (req, res) => {
   console.log("data: " + data);
 
   try {
-    await axios.post("http://localhost:3000/create", { data });
-    res.redirect("/user");
+    await axios.post(`http://localhost:3000/create/${login_id}`, { data });
+    res.redirect(`/user/${login_id}`);
   } catch (error) {
     console.error("Failed to create user:", error.message);
-    res.redirect("/user");
-  }
+    res.redirect(`/user/${login_id}`);
+  }}
 });
 
 app.post("/login", async (req, res) => {
+  if(isLogged){
+    res.redirect(`/user/${login_id}`);
+  }
   const { email, password } = req.body;
   const data = {
     email: email,
     password: password,
   }
 
-  console.log("data "+data.email);
+  // console.log("data "+data.email);
 
   try {
     const results = await axios.post("http://localhost:3000/login", { data });
-    console.log(results)
-    console.log(results.data)
+    // console.log(results)
+    // console.log(results.data)
     login_id = results.data;
+    isLogged = true;
     res.redirect(`/user/${results.data}`);
   } catch (error) {
     console.error("Failed to login:", error.message);
@@ -112,6 +136,9 @@ app.post("/login", async (req, res) => {
 })
 
 app.post("/edit", async (req, res) => {
+  if(!isLogged){
+    res.redirect("/");
+  }
 
   const { id, name, email, phone, dob } = req.body;
   const data = {
@@ -122,42 +149,19 @@ app.post("/edit", async (req, res) => {
     date_of_birth: dob,
   }
 
-  // if(name && email){
-  //   console.log("working")
-  //    updatedItem = {
-  //     id: id,
-  //     email: email,
-  //     name: name
-  //   }
-  // } else if(email && !name) {
-  //   console.log("working")
-  // updatedItem = {
-  //     id: id,
-  //     email: email
-  //   }
-  // } else if(name && !email) {
-  //   console.log("name here")
-  // updatedItem = {
-  //     id: id,
-  //     name: name
-  //   }
-  // } else {
-  //   console.log("no change made");
-  //   res.redirect("/add");
-  // }
-
-  // console.log(updatedItem)
-
   try {
-    await axios.post("http://localhost:3000/update", { data });
-    res.redirect("/user");
+    await axios.post(`http://localhost:3000/update/${login_id}`, { data });
+    res.redirect(`/user/${login_id}`);
   } catch (error) {
     console.error("Failed to update user:", error.message);
-    res.redirect("/user");
+    res.redirect(`/user/${login_id}`);
   }
 });
 
 app.post(`/delete/:id`, async (req, res) => {
+  if(!isLogged){
+    res.redirect("/");
+  }
   const id = req.params.id;
   console.log(id)
   const itemId = {
@@ -165,11 +169,11 @@ app.post(`/delete/:id`, async (req, res) => {
   }
   
   try {
-    await axios.post("http://localhost:3000/delete", itemId);
-    res.redirect("/");
+    await axios.post(`http://localhost:3000/delete/${login_id}`, itemId);
+    res.redirect(`/user/${login_id}`);
   } catch (error) {
     console.error("Failed to update user:", error.message);
-    res.redirect("/");
+    res.redirect(`/user/${login_id}`);
   }
 })
 
