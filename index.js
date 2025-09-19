@@ -150,11 +150,11 @@
 
     // registration 
     app.post('/register', async (req, res) => {
-        const {full_name, email, password, retypePassword} = req.body;
-        console.log(full_name);
-        console.log(email);
-        console.log(password);
-        console.log(retypePassword);
+        const {full_name, email, password, retypePassword} = req.body.data;
+        console.log("full name"+full_name);
+        console.log("email"+email);
+        console.log("password"+password);
+        console.log("retype password"+retypePassword);
 
         async function checkIfUnique(email){
             const data = email;

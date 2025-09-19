@@ -5,13 +5,16 @@
 
      <form class="flex flex-vertical createFormBody" method="POST" action="/register" >
         <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" />
+        <input type="text" id="name" name="full_name" />
 
         <label for="email">Email</label>
         <input type="text" id="email" name="email" />
 
-        <label for="email">Retype Password</label>
+        <label for="email">Password</label>
         <input type="text" id="password" name="password" />
+
+        <label for="email">Retype Password</label>
+        <input type="text" id="password" name="retypePassword" />
 
         <input type="submit" value="Register" />
     </form>

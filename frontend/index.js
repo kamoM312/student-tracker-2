@@ -158,6 +158,26 @@ app.post("/edit", async (req, res) => {
   }
 });
 
+app.post("/register", async (req, res) => {
+  const {full_name, email, password, retypePassword} = req.body;
+  const data = {
+    full_name: full_name,
+    email: email,
+    password: password,
+    retypePassword: retypePassword,
+  }
+
+  console.log(data);
+
+  try {
+    await axios.post(`http://localhost:3000/register`, { data });
+    res.redirect("/");
+  } catch (error) {
+    console.log("Failed to register new user: ", error.message);
+    res.redirect("/register");
+  }
+})
+
 app.post(`/delete/:id`, async (req, res) => {
   if(!isLogged){
     res.redirect("/");
@@ -176,6 +196,8 @@ app.post(`/delete/:id`, async (req, res) => {
     res.redirect(`/user/${login_id}`);
   }
 })
+
+
 
  app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
