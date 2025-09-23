@@ -1,5 +1,11 @@
 <%- include('partials/header.ejs') %>
 
+<% if (locals.error) { %>
+  <div class="error-message">
+    <p><%= error %></p>
+  </div>
+  <% } %>
+
 <div class="flex flex-vertical login-body">
     <h1>Login</h1>
 
@@ -10,4 +16,15 @@
         <input type="text" id="email" name="password" />
         <input type="submit" value="Log in" />
     </form>
+    <hr>
+    <div class="flex flex-vertical">
+        <div>
+            <p>Don't have an account?</p>
+        </div>
+        <div class="flex flex-horizontal sign-in">
+            <div>
+                <a href="/register">Register</a>
+            </div>   
+        </div>
+    </div>
 </div>

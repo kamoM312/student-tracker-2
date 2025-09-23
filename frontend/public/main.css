@@ -280,4 +280,30 @@ input {
 .login-body {
     width: 300px;
     margin: 50px auto 0;
+    border: solid 1px;
+    border-right: solid 0.7px #353935;
+    padding: 10px;
+}
+
+.login-body h1 {
+    margin-left: 10px;
+}
+
+.sign-in {
+    align-self: self-end;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-weight: 600;
+    background: white;
+    border: solid .5px black;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.error-message {
+    margin: 20px 0 0 20px;
+    border: solid 1px;
+    width: fit-content;
+    padding: 10px;
 }

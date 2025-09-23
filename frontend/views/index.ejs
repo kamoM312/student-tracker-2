@@ -8,6 +8,10 @@
   <div class="addStudent">
     <a href="#" id="openAddModal">Add New Student</a>
   </div>
+
+  <div class="addStudent">
+    <a href="/logout">Logout</a>
+  </div>
 </div>
 
 <hr>
@@ -79,11 +83,11 @@
     <div class="flex flex-vertical  createForm view-student-modal viewBorders">
         <div class="view-modal-header flex">
             <h1>Student Details</h1>
-            <a class="view-link" href="/">Back List</a>
+            <a class="view-link close-view" href="#">Back List</a>
         </div>
         <hr class="hr">
         <div>
-            <a class="view-link view-div-link" href="/">Back to List</a>
+            <a class="view-link view-div-link close-view" href="#">Back to List</a>
         </div>
         <div class="grid-container">
             <div class="bold">ID:</div>
@@ -235,6 +239,14 @@
       [viewModal, addModal, editModal, deleteModal].forEach(closeModal);
     }
   });
+
+  // Close view modal 
+  document.querySelectorAll('.close-view').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    closeModal(viewModal);
+  });
+});
 </script>
 
 

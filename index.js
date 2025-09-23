@@ -150,11 +150,12 @@
 
     // registration 
     app.post('/register', async (req, res) => {
+        let message;
         const {full_name, email, password, retypePassword} = req.body.data;
         console.log("full name"+full_name);
         console.log("email"+email);
-        console.log("password"+password);
-        console.log("retype password"+retypePassword);
+        // console.log("password"+password);
+        // console.log("retype password"+retypePassword); 
 
         async function checkIfUnique(email){
             const data = email;
@@ -171,92 +172,78 @@
             }
         }
 
-        if (!full_name || full_name.trim().length === 0 ) {
-            res.json("Full name cannot be empty.")
-        }
+         if (!full_name || full_name.trim().length === 0) {
+    return res.status(400).json({ message: "Full name cannot be empty!" });
+  }
 
-         if (!email || email.trim().length === 0) {
-        // Input is null, undefined, empty, or contains only whitespace
-            res.json("Email cannot be empty.")
-        }
+  if (!email || email.trim().length === 0) {
+    return res.status(400).json({ message: "Email cannot be empty!" });
+  }
 
-        if (!password || password.trim().length === 0) {
-            res.json("Password cannot be empty")
-        }
+  if (!password || password.trim().length === 0) {
+    return res.status(400).json({ message: "Password cannot be empty!" });
+  }
 
-        if (!retypePassword || retypePassword.trim().length === 0) {
-            res.json("Retype password cannot be empty")
-        }
+  if (!retypePassword || retypePassword.trim().length === 0) {
+    return res.status(400).json({ message: "Retype password cannot be empty!" });
+  }
 
-        if (password !== retypePassword) {
-            res.json("Password and Retype password must match")
-        }
+  if (password !== retypePassword) {
+    return res.status(400).json({ message: "Password and Retype password must match!" });
+  }
 
         try {
-            const result = await checkIfUnique(email);
-            console.log("Result: "+result);
-            if (result) {
-                console.log('Email already in use! ');
-                res.json("Email must be unique")
-            }
-            
-        const hPassword = await hashPassword(password);
-        
-            try {
-                        await dbPool.query(`INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)`,
-                            [full_name, email, hPassword]
-                        );
-                        res.json("Success");
-                    } catch (error) {
-                        console.log('Error registering user: ', error);
-                        res.status(500).send('Error registering user');
-                    }
+    const [rows] = await dbPool.query(`SELECT id FROM users WHERE email = ?`, [email]);
 
-        } catch (error) {
-            console.log('Error, could not check for email duplicates: '+error);
-        }
+    if (rows.length > 0) {
+      return res.status(400).json({ message: "Email is already in use!" });
+    }
 
-        
+    const hPassword = await hashPassword(password);
+
+    await dbPool.query(
+      `INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)`,
+      [full_name, email, hPassword]
+    );
+
+    return res.status(201).json({ message: "User registered successfully!" });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return res.status(500).json({ error: "Server error. Please try again later." });
+  }   
     });
 
     // login 
     app.post('/login', async (req, res) => {
-        const {email, password} = req.body.data;
-        // const {email, password} = req.body;
-
-
-
+        const {email, password} = req.body.data; 
         let user = "";
-        // console.log(email);
-        // console.log(password);
+
+         if (!email || email.trim().length === 0) {
+    return res.status(400).json({ message: "Email cannot be empty!" });
+  }
+
+  if (!password || password.trim().length === 0) {
+    return res.status(400).json({ message: "Password cannot be empty!" });
+  }
 
         const hashed = await hashPassword(password);
-        // console.log(hashed);
 
         try {
             const result = await dbPool.query(`SELECT id, password FROM users WHERE email = '${email}';`);
-            // console.log(result)
             const user = result[0][0].id;
-            // console.log(user)
             const dbPassword = result[0][0].password;
-            // console.log(dbPassword)
-            // console.log(hashed)
-
             const isMatch = await verifyPassword(password, dbPassword);
-            // console.log("Password matches:", isMatch);
+            console.log("Password matches:", isMatch);
 
-            if(isMatch){
+            if(isMatch === true){
                 // res.redirect(`/users/${user}`);
                 res.json(user)
             } else {
-                res.json("Password incorrect")
+                return res.status(400).json({ message: "Invalid Email and/or Password combination" });
             }
-
-            // console.log(user[0][0].id);
-            // res.json(user);
             
         } catch (error) {
             console.log(`Invalid Email and/or Password combination `+error);
-            res.status(500).send(`Invalid Email and/or Password combination `+error);
+            return res.status(500).json({ error: "Server error. Please try again later." });
         }
     })

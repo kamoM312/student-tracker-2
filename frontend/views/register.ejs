@@ -1,5 +1,11 @@
 <%- include('partials/header.ejs') %>
 
+ <% if (locals.error) { %>
+  <div class="error-message">
+    <p><%= error %></p>
+  </div>
+  <% } %>
+
 <div class="flex flex-vertical login-body">
     <h1>Registration</h1>
 
@@ -23,10 +29,7 @@
         <div>
             <p>Already have an account?</p>
         </div>
-        <div class="flex flex-horizontal">
-            <div>
-                <p>Log in</p>
-            </div>
+        <div class="flex flex-horizontal sign-in">
             <div>
                 <a href="/">Sign in</a>
             </div>   

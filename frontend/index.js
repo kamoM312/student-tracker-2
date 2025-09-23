@@ -125,15 +125,23 @@ app.post("/login", async (req, res) => {
   try {
     const results = await axios.post("http://localhost:3000/login", { data });
     // console.log(results)
-    // console.log(results.data)
+    console.log(results.data)
     login_id = results.data;
     isLogged = true;
+    
     res.redirect(`/user/${results.data}`);
   } catch (error) {
-    console.error("Failed to login:", error.message);
-    res.redirect("/");
-  }
-})
+    if (error.response) { 
+  
+   console.log("API responded with error:", error.response.data);
+   res.render("login.ejs", { error: error.response.data.message });
+
+  } else {
+   // Network/server issue
+   console.log("Network/API error:", error.message);
+   res.render("login.ejs", { error: "Server unavailable. Please try again." });
+ }
+}})
 
 app.post("/edit", async (req, res) => {
   if(!isLogged){
@@ -158,25 +166,28 @@ app.post("/edit", async (req, res) => {
   }
 });
 
+
 app.post("/register", async (req, res) => {
-  const {full_name, email, password, retypePassword} = req.body;
-  const data = {
-    full_name: full_name,
-    email: email,
-    password: password,
-    retypePassword: retypePassword,
-  }
+const { full_name, email, password, retypePassword } = req.body;
 
-  console.log(data);
+const data = { full_name, email, password, retypePassword };
+console.log("Frontend data:", data);
 
-  try {
-    await axios.post(`http://localhost:3000/register`, { data });
-    res.redirect("/");
-  } catch (error) {
-    console.log("Failed to register new user: ", error.message);
-    res.redirect("/register");
-  }
-})
+try {
+ await axios.post("http://localhost:3000/register", { data });
+ res.redirect("/");
+} catch (error) {
+ if (error.response) {
+   // API responded with error (validation, duplicate email, etc.)
+   console.log("API responded with error:", error.response.data);
+   res.render("register.ejs", { error: error.response.data.message });
+ } else {
+   // Network/server issue
+   console.log("Network/API error:", error.message);
+   res.render("register.ejs", { error: "Server unavailable. Please try again." });
+ }
+}
+});
 
 app.post(`/delete/:id`, async (req, res) => {
   if(!isLogged){
@@ -195,6 +206,12 @@ app.post(`/delete/:id`, async (req, res) => {
     console.error("Failed to update user:", error.message);
     res.redirect(`/user/${login_id}`);
   }
+})
+
+// logout functionality
+app.get('/logout', async (req, res) => {
+  isLogged = false;
+  res.redirect("/"); 
 })
 
 
